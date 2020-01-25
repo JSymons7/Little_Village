@@ -24,12 +24,19 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         MoveCamera();
+        RotateCamera();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Camera.main.transform.rotation = rotation;
+        }
     }
 
     void MoveCamera()
     {
         float moveX = Camera.main.transform.position.x;
         float moveZ = Camera.main.transform.position.z;
+        float moveY = Camera.main.transform.position.y;
 
         float xPos = Input.mousePosition.x;
         float yPos = Input.mousePosition.y;
@@ -52,9 +59,30 @@ public class InputManager : MonoBehaviour
             moveZ -= panSpeed;
         }
 
-        Vector3 newPos = new Vector3(moveX, 0, moveZ);
+        //Multiply by 20 because panSpeed is pretty slow by itself
+        moveY -= Input.GetAxis("Mouse ScrollWheel") * (panSpeed * 20);
+        moveY = Mathf.Clamp(moveY, minHeight, maxHeight);
+
+        Vector3 newPos = new Vector3(moveX, moveY, moveZ);
 
         Camera.main.transform.position = newPos;
 
+    }
+
+    void RotateCamera()
+    {
+        Vector3 origin = Camera.main.transform.eulerAngles;
+        Vector3 destination = origin;
+
+        if (Input.GetMouseButton(2))
+        {
+            destination.x -= Input.GetAxis("Mouse Y") * rotateAmount;
+            destination.y += Input.GetAxis("Mouse X") * rotateAmount;
+        }
+
+        if(destination != origin)
+        {
+            Camera.main.transform.eulerAngles = Vector3.MoveTowards(origin, destination, Time.deltaTime * rotateSpeed);
+        }
     }
 }
