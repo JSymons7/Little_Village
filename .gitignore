@@ -2,6 +2,9 @@ Assets/Standard\ Assets/*
 Assets/SampleScenes/*
 Library/metadata/*
 Temp/*
+Temp/_*
+*.log
+
 
 # Prerequisites
 *.d
