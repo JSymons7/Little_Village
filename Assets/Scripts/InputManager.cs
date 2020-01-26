@@ -13,6 +13,8 @@ public class InputManager : MonoBehaviour
     private float panDetect = 15f;
     private float minHeight = 10f;
     private float maxHeight = 100f;
+
+    public GameObject selectedObject;
     
     // Start is called before the first frame update
     void Start()
@@ -29,6 +31,28 @@ public class InputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Camera.main.transform.rotation = rotation;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            LeftClick();
+        }
+    }
+
+    public void LeftClick()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if(Physics.RayCast(ray, out hit, 100))
+        {
+            if(hit.collider.tag == "Ground")
+            {
+                selectedObject = null;
+            } else if(hit.collider.tag == "Selectable")
+            {
+                selectedObject = hit.collider.gameObject;
+            }
         }
     }
 
